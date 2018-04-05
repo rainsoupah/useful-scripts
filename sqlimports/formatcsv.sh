@@ -60,10 +60,11 @@ read -p 'Table: ' table
 read -sp 'Password: ' password
 
 
-table_headers=`PGPASSWORD=${password} psql -h $host -U $user -d $database -t -c "delete from ${table}; alter sequence ${table}_ogc_fid_seq start 1; select column_name from information_schema.columns where table_name='${table}' and column_name != 'ogc_fid';"`
+table_headers=`PGPASSWORD=${password} psql -h $host -U $user -d $database -t -c "delete from ${table}; alter sequence ${table}_ogc_fid_seq restart with 1; select column_name from information_schema.columns where table_name='${table}' and column_name != 'ogc_fid';"`
 
 csv_headers="$(join ',' ${table_headers})"
 
 copy="$(PGPASSWORD=${password} psql -h $host -U $user -d $database -c "\copy ${table}(${csv_headers}) from ${file_path} with delimiter ',' csv")"
 
+# to do: print line number
 echo "${copy} records into ${table}"
