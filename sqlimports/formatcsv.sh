@@ -41,7 +41,7 @@ get_header() {
 	header="$(sed '1q;d' ${file_path}\
 		| sed -E 's/[][()%$-]//g'\
 		| sed -e 's/:/ /g'\
-		| sed -e 's/\"//g'\
+		| sed -e 's/"//g'\
 		| sed -E 's/[[:space:]]+/_/g'\ 
 	)"
 	# replace upper with lower case
