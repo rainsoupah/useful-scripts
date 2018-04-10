@@ -110,8 +110,10 @@ do
 	read -p 'Is this the correct file? (y/n): ' correct
 	if [ $correct = "y" ];
 	then
-		echo "===Column types==="
-		get_col_types
+		if [ $is_new = "y" ]; then
+			echo "===Column types==="
+			get_col_types
+		fi
 		read -p 'Remove header? (y/n): ' remove
 		if [ $remove = "y" ];
 		then
@@ -130,7 +132,7 @@ echo "${create_Table}"
 
 if [ $is_new = "y" ]; then
 	table_headers=`PGPASSWORD=${password} psql -h $host -U $user -d $database -t -c \
-		"create sequence ${table}_fid_seq;\
+		"create sequence ${table}_ogc_fid_seq;\
 		create table if not exists ${table}(${fields});\
 		select column_name from information_schema.columns \
 			where table_name='${table}' and column_name != 'ogc_fid';"`
@@ -146,7 +148,7 @@ echo $table_headers
 
 csv_headers="$(join ',' ${table_headers})"
 
-for file in part*.csv
+for file in *.csv
 do
 	echo "Copying ${file}..."
 	copy="$(PGPASSWORD=${password} psql -h $host -U $user -d $database -c "\copy ${table}(${csv_headers}) from ${file} with delimiter ',' csv")"
