@@ -121,10 +121,6 @@ do
 	fi
 done
 
-
-
-
-
 # sql queries
 
 create_Table="create table if not exists ${table}(${fields});"
@@ -152,8 +148,7 @@ csv_headers="$(join ',' ${table_headers})"
 
 for file in part*.csv
 do
-	copy="$(PGPASSWORD=${password} psql -h $host -U $user -d $database -c "\copy ${table}(${csv_headers}) from ${file_path} with delimiter ',' csv")"
+	echo "Copying ${file}..."
+	copy="$(PGPASSWORD=${password} psql -h $host -U $user -d $database -c "\copy ${table}(${csv_headers}) from ${file} with delimiter ',' csv")"
+	parse_response $copy
 done
-
-# to do: print line number
-parse_response $copy
