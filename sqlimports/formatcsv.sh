@@ -150,8 +150,10 @@ echo $table_headers
 
 csv_headers="$(join ',' ${table_headers})"
 
-copy="$(PGPASSWORD=${password} psql -h $host -U $user -d $database -c "\copy ${table}(${csv_headers}) from ${file_path} with delimiter ',' csv")"
-
+for file in part*.csv
+do
+	copy="$(PGPASSWORD=${password} psql -h $host -U $user -d $database -c "\copy ${table}(${csv_headers}) from ${file_path} with delimiter ',' csv")"
+done
 
 # to do: print line number
 parse_response $copy
