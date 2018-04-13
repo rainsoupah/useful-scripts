@@ -139,7 +139,6 @@ if [ $is_new = "y" ]; then
 else
 	table_headers=`PGPASSWORD=${password} psql -h $host -U $user -d $database -t -c \
 		"delete from ${table}; \
-		alter sequence ${table}_ogc_fid_seq restart with 1; \
 		select column_name from information_schema.columns \
 			where table_name='${table}' and column_name != 'ogc_fid';"`
 fi
